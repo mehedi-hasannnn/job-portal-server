@@ -55,6 +55,20 @@ async function run() {
         const email = req.query.email;
         const query = {applicant_email: email}
         const result = await jobApplicationCollection.find(query).toArray();
+
+        for(const application of result){
+            console.log(application.job_id)
+            const query1 = {_id: new ObjectId(application.job_id)}
+            const job = await jobsCollection.findOne(query1);
+            if(job){
+                application.title = job.title;
+                application.location = job.location;
+                application.company = job.company;
+                application.company_logo = job.company_logo;
+                application.jobType = job.jobType;
+            }
+        }
+
         res.send(result);
     })
 
@@ -63,6 +77,15 @@ async function run() {
         const result = await jobApplicationCollection.insertOne(application);
         res.send(result);
     })
+
+    // DELETE an application by ID
+    app.delete('/job-application/:id', async (req, res) => {
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) };
+    const result = await jobApplicationCollection.deleteOne(query);
+    res.send(result);
+    });
+
 
 
   } finally {
