@@ -48,6 +48,12 @@ async function run() {
         res.send(result);
     })
 
+    app.post('/jobs', async(req, res)=>{
+        const newJob = req.body;
+        const result = await jobsCollection.insertOne(newJob);
+        res.send(result);
+    })
+
     // job application apis
     // get all data, get one data, get some data[0,1,many]
 
