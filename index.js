@@ -10,7 +10,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 app.use(cors({
     origin: ['https://job-portal-6cfe7.web.app'],
-    credentials: true
+    credentials: true,
 }));
 app.use(express.json());
 app.use(cookieParser());
