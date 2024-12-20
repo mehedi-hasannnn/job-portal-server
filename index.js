@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 const app = express();
 require('dotenv').config()
 
@@ -27,13 +28,20 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
     // Jobs related APIs
     const jobsCollection = client.db('jobPortal').collection('jobs');
     const jobApplicationCollection = client.db('jobPortal').collection('job-applications');
+
+    // Auth related APIs
+    app.post('/jwt', async(req, res)=>{
+        const user = req.body;
+        const token = jwt.sign(user, 'secret', {expiresIn: '1h'});
+        res.send(token);
+    })
 
     app.get('/jobs', async(req,res)=>{
 
